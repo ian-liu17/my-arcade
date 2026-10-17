@@ -280,6 +280,9 @@
         status.textContent = "Ad preview playing.";
         render();
       });
+      if (new URLSearchParams(window.location.search).get("autoplay") === "1") {
+        button.click();
+      }
     })();
   </script>
 </body>

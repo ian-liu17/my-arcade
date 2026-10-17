@@ -96,6 +96,32 @@
     .game-pick span:last-child { color: var(--muted); font-weight: 500; line-height: 1.5; }
     .arcade-ad-link { margin: 20px 0 0; text-align: center; }
     .arcade-ad-link a { color: var(--green); font-weight: 800; }
+    .visit-ad {
+      position: fixed;
+      z-index: 20;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      overflow-y: auto;
+      padding: 16px;
+      background: #101811ed;
+    }
+    .visit-ad[hidden] { display: none; }
+    .visit-ad-dialog {
+      width: min(960px, 100%);
+      overflow: hidden;
+      border: 1px solid #6a8468;
+      border-radius: 20px;
+      background: #18271e;
+      color: #edf7f1;
+      box-shadow: 0 24px 85px #0009;
+    }
+    .visit-ad-heading { margin: 0; padding: 14px 18px; color: #baff83; font-size: 1.05rem; }
+    .visit-ad-frame { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #101811; }
+    .visit-ad-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; }
+    .visit-ad-footer p { margin: 0; color: #c6d2c1; font-size: .9rem; }
+    .visit-ad-continue { min-height: 42px; padding: 0 18px; border-radius: 12px; }
+    .visit-ad-continue:disabled { cursor: not-allowed; opacity: .55; }
     .game-nav { display: flex; gap: 9px; margin: 0 0 16px; }
     .game-nav button { padding: 9px 15px; border-radius: 999px; }
     .snake-shell { overflow: hidden; border: 1px solid #d7dfd4; border-radius: 22px; background: #fffdf8; box-shadow: 0 18px 48px #344a3515; }
@@ -283,6 +309,10 @@
       .game-pick { min-height: 155px; }
       .snake-frame { height: 78vh; min-height: 500px; }
       .snake-footer { flex-direction: column; gap: 5px; }
+      .visit-ad { padding: 8px; }
+      .visit-ad-dialog { border-radius: 14px; }
+      .visit-ad-heading { padding: 10px 12px; }
+      .visit-ad-footer { align-items: stretch; flex-direction: column; padding: 10px 12px; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
   </style>
@@ -393,6 +423,16 @@
       </div>
     </section>
   </main>
+  <section class="visit-ad" id="visit-ad" role="dialog" aria-modal="true" aria-labelledby="visit-ad-title" hidden>
+    <div class="visit-ad-dialog">
+      <h2 class="visit-ad-heading" id="visit-ad-title">Fun.fun presents</h2>
+      <iframe class="visit-ad-frame" id="visit-ad-frame" title="Fun.fun video ad" src="about:blank"></iframe>
+      <div class="visit-ad-footer">
+        <p id="visit-ad-countdown" aria-live="polite">Your game will be ready after the ad.</p>
+        <button class="visit-ad-continue" id="visit-ad-continue" type="button" disabled>Continue in 20</button>
+      </div>
+    </div>
+  </section>
   <script>
     (() => {
       const homeScreen = document.getElementById("home-screen");
@@ -402,6 +442,10 @@
       const catDetails = document.getElementById("cat-details");
       const snakeHeader = document.getElementById("snake-header");
       const snakeGame = document.getElementById("snake-game");
+      const visitAd = document.getElementById("visit-ad");
+      const visitAdFrame = document.getElementById("visit-ad-frame");
+      const visitAdCountdown = document.getElementById("visit-ad-countdown");
+      const visitAdContinue = document.getElementById("visit-ad-continue");
       const canvas = document.getElementById("game");
       const ctx = canvas.getContext("2d");
       const scoreEl = document.getElementById("score");
@@ -423,6 +467,47 @@
       const gravity = 0.68;
       let lastClick = 0;
       let activeGame = "home";
+      let visitAdTimer = null;
+
+      function maybeShowVisitAd() {
+        try {
+          if (sessionStorage.getItem("funFunVisitAdShown") === "1") return;
+          sessionStorage.setItem("funFunVisitAdShown", "1");
+        } catch (error) {
+          console.error("Could not record the Fun.fun ad visit.", error);
+          return;
+        }
+        if (Math.random() >= 0.5) return;
+
+        let remaining = 20;
+        visitAd.hidden = false;
+        visitAdFrame.src = "fun.fun-ad.html?autoplay=1";
+        visitAdContinue.disabled = true;
+        visitAdContinue.textContent = `Continue in ${remaining}`;
+        visitAdCountdown.textContent = "Enjoy the Fun.fun ad while we get your game ready.";
+        visitAdTimer = window.setInterval(() => {
+          remaining--;
+          if (remaining > 0) {
+            visitAdContinue.textContent = `Continue in ${remaining}`;
+            return;
+          }
+          window.clearInterval(visitAdTimer);
+          visitAdTimer = null;
+          visitAdContinue.disabled = false;
+          visitAdContinue.textContent = "Continue to games";
+          visitAdCountdown.textContent = "Thanks for watching! Choose a game to play.";
+        }, 1000);
+      }
+
+      visitAdContinue.addEventListener("click", () => {
+        if (visitAdContinue.disabled) return;
+        visitAd.hidden = true;
+        visitAdFrame.src = "about:blank";
+        if (visitAdTimer !== null) {
+          window.clearInterval(visitAdTimer);
+          visitAdTimer = null;
+        }
+      });
 
       function showGame(game) {
         activeGame = game;
@@ -802,6 +887,7 @@
       document.getElementById("duck-button").addEventListener("pointerdown", event => { event.preventDefault(); duck(); });
       startButton.addEventListener("click", startGame);
       showGame("home");
+      maybeShowVisitAd();
 
       renderScores();
       draw();
