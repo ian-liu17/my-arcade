@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101811">
+  <meta name="description" content="A short video-style ad preview for Fun.fun, featuring Cat Sprint and Snake Arena.">
+  <title>Fun.fun — Ad Preview</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f4f8eb;
+      --muted: #c6d2c1;
+      --lime: #baff83;
+      --gold: #ffc568;
+      --bg: #101811;
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 22px;
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+      background: radial-gradient(ellipse at 50% 0, #2b4932, var(--bg) 70%);
+      font-family: "Trebuchet MS", system-ui, sans-serif;
+    }
+    main { width: min(100%, 960px); }
+    header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 13px; }
+    header p { margin: 0; color: var(--muted); font-size: .9rem; }
+    header a { color: var(--lime); font-size: .9rem; font-weight: 800; }
+    .ad-frame {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      min-height: 330px;
+      border: 1px solid #6a8468;
+      border-radius: 24px;
+      background:
+        radial-gradient(ellipse at 18% 13%, #a4d58c38, transparent 32%),
+        radial-gradient(ellipse at 85% 88%, #ffc56820, transparent 30%),
+        linear-gradient(145deg, #1b3124, #101811 75%);
+      box-shadow: 0 24px 85px #0008;
+    }
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, #ffffffb0 1px, transparent 1.5px),
+        radial-gradient(circle, #baff83aa 1px, transparent 1.5px);
+      background-position: 0 0, 35px 45px;
+      background-size: 90px 90px, 130px 110px;
+      opacity: .22;
+    }
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 1fr .95fr;
+      align-items: center;
+      gap: 2%;
+      padding: clamp(20px, 5vw, 64px);
+      opacity: 0;
+      transform: translateY(10px) scale(.99);
+      transition: opacity .55s ease, transform .55s ease;
+      pointer-events: none;
+    }
+    .scene.active { opacity: 1; transform: translateY(0) scale(1); }
+    .scene.center { grid-template-columns: 1fr; place-items: center; text-align: center; }
+    .copy { position: relative; z-index: 1; max-width: 460px; }
+    .eyebrow { margin: 0 0 12px; color: var(--gold); font-size: clamp(.62rem, 1.4vw, .84rem); font-weight: 900; letter-spacing: .18em; }
+    h1, h2 { margin: 0; font-size: clamp(2rem, 6.5vw, 5.2rem); line-height: .98; letter-spacing: -.065em; }
+    .copy > p:last-child { max-width: 430px; margin: 15px 0 0; color: var(--muted); font-size: clamp(.9rem, 2vw, 1.25rem); line-height: 1.45; }
+    .hero { display: grid; place-items: center; min-height: 180px; font-size: clamp(6rem, 18vw, 13rem); filter: drop-shadow(0 18px 24px #0006); }
+    .hero-cat { animation: cat-hop 1s ease-in-out infinite alternate; }
+    .hero-snake { animation: snake-wiggle 1.1s ease-in-out infinite alternate; }
+    @keyframes cat-hop { to { transform: translateY(-15px) rotate(-3deg); } }
+    @keyframes snake-wiggle { to { transform: rotate(9deg) translateY(-6px); } }
+    .tv-wrap { display: grid; place-items: center; }
+    .tv {
+      position: relative;
+      width: min(100%, 390px);
+      padding: 10px 10px 20px;
+      border: 7px solid #3e4938;
+      border-radius: 24px;
+      background: #273126;
+      box-shadow: 0 18px 35px #0007;
+      transform: rotate(2deg);
+    }
+    .tv-screen {
+      display: grid;
+      min-height: 180px;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 13px;
+      background: linear-gradient(145deg, #dcefd4, #a7c990);
+      color: #26342d;
+    }
+    .tv-screen span { font-size: clamp(4rem, 10vw, 7rem); }
+    .tv-brand { margin: 7px 4px 0; color: #d6e2d2; font-size: .65rem; font-weight: 900; letter-spacing: .2em; text-align: center; }
+    .tv-legs { display: flex; justify-content: space-around; height: 12px; }
+    .tv-legs i { width: 8px; height: 14px; background: #3e4938; transform: rotate(18deg); }
+    .controls { position: absolute; z-index: 4; right: 16px; bottom: 15px; left: 16px; display: flex; align-items: center; gap: 12px; }
+    .play { min-width: 76px; min-height: 37px; padding: 0 14px; border: 1px solid #70826a; border-radius: 999px; background: #1b2a1e; color: var(--ink); font: inherit; font-size: .83rem; font-weight: 900; cursor: pointer; }
+    .play:hover { background: #304630; }
+    .play:focus-visible, a:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+    .timeline { height: 5px; flex: 1; overflow: hidden; border-radius: 9px; background: #ffffff32; }
+    .progress { width: 0; height: 100%; background: var(--lime); }
+    .time { min-width: 42px; color: #e5ecdf; font-size: .75rem; font-variant-numeric: tabular-nums; }
+    .caption {
+      position: absolute;
+      z-index: 3;
+      right: 8%;
+      bottom: 54px;
+      left: 8%;
+      width: fit-content;
+      max-width: 84%;
+      margin: auto;
+      padding: 7px 13px;
+      border-radius: 8px;
+      background: #080d0be0;
+      color: white;
+      font-size: clamp(.72rem, 1.6vw, 1rem);
+      text-align: center;
+      line-height: 1.35;
+      pointer-events: none;
+    }
+    .final-title { color: var(--lime); }
+    .final-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 20px;
+      border-radius: 14px;
+      background: var(--lime);
+      color: #172311;
+      font-size: clamp(.82rem, 1.6vw, 1rem);
+      font-weight: 900;
+      text-decoration: none;
+    }
+    .signoff { color: var(--gold) !important; font-weight: 900; letter-spacing: .06em; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      header { align-items: flex-start; flex-direction: column; }
+      .ad-frame { min-height: 480px; aspect-ratio: auto; }
+      .scene { grid-template-columns: 1fr; grid-template-rows: 1fr .8fr; gap: 0; padding: 28px 22px 75px; text-align: center; }
+      .copy { margin: auto; }
+      .copy > p:last-child { margin-right: auto; margin-left: auto; }
+      .hero { min-height: 130px; }
+      .tv-screen { min-height: 130px; }
+      .scene.center { grid-template-rows: 1fr; }
+      .caption { bottom: 57px; }
+      .controls { right: 10px; bottom: 11px; left: 10px; gap: 8px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+      .scene { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <p class="eyebrow">A little preview of a Fun.fun ad</p>
+        <p>20-second video-style ad · Captions included · Sound optional</p>
+      </div>
+      <a href="fun.fun.html">Open the Fun.fun arcade ↗</a>
+    </header>
+    <section class="ad-frame" aria-label="Fun.fun video-style ad">
+      <div class="stars" aria-hidden="true"></div>
+      <article class="scene active" data-start="0" data-end="4" data-caption="Bored at home? Adventure is closer than you think.">
+        <div class="copy">
+          <p class="eyebrow">WHENEVER YOU WANT...</p>
+          <h1>Ready for<br>a little fun?</h1>
+          <p>Pick a game. Jump right in.</p>
+        </div>
+        <div class="hero" aria-hidden="true">✨</div>
+      </article>
+      <article class="scene" data-start="4" data-end="8" data-caption="Jump, duck, and run with Cat Sprint!">
+        <div class="copy">
+          <p class="eyebrow">READY, SET, MEOW!</p>
+          <h2>Run with<br>Cat Sprint.</h2>
+          <p>Jump the cactuses. Duck the birds. Keep those paws moving!</p>
+        </div>
+        <div class="hero hero-cat" aria-hidden="true">🐈</div>
+      </article>
+      <article class="scene" data-start="8" data-end="12" data-caption="Or gobble pearls and outsmart the rivals in Snake Arena!">
+        <div class="copy">
+          <p class="eyebrow">LITTLE SNAKES. BIG ADVENTURES.</p>
+          <h2>Rule the<br>Snake Arena.</h2>
+          <p>Grab pearls, grow big, and see who rules!</p>
+        </div>
+        <div class="hero hero-snake" aria-hidden="true">🐍</div>
+      </article>
+      <article class="scene" data-start="12" data-end="16" data-caption="Play your favorite games on your computer, tablet, or phone.">
+        <div class="copy">
+          <p class="eyebrow">YOUR GAME. YOUR MOMENT.</p>
+          <h2>Even from<br>your couch.</h2>
+          <p>Settle in, pick a game, and play whenever you like.</p>
+        </div>
+        <div class="tv-wrap" aria-hidden="true">
+          <div class="tv">
+            <div class="tv-screen"><span>🐈 &nbsp;🐍</span></div>
+            <p class="tv-brand">FUN.FUN</p>
+          </div>
+          <div class="tv-legs"><i></i><i></i></div>
+        </div>
+      </article>
+      <article class="scene center" data-start="16" data-end="20" data-caption="Fun.fun. A little play goes a long way. From Ian.">
+        <div class="copy">
+          <p class="eyebrow">SMALL GAMES. BIG SMILES.</p>
+          <h2 class="final-title">Fun.fun 🎮</h2>
+          <p>Cat Sprint and Snake Arena. Free to play, right in your browser.</p>
+          <a class="final-link" href="fun.fun.html">Come play at Fun.fun</a>
+          <p class="signoff">Made with fun, from Ian.</p>
+        </div>
+      </article>
+      <p class="caption" id="caption" aria-live="polite"></p>
+      <div class="controls">
+        <button class="play" id="play-button" type="button">▶ Play ad</button>
+        <div class="timeline" aria-hidden="true"><div class="progress" id="progress"></div></div>
+        <span class="time" id="time">0:00</span>
+      </div>
+    </section>
+    <p class="sr-only" id="ad-status" aria-live="polite">Ad preview is ready to play.</p>
+  </main>
+  <script>
+    (() => {
+      const scenes = [...document.querySelectorAll(".scene")];
+      const button = document.getElementById("play-button");
+      const caption = document.getElementById("caption");
+      const progress = document.getElementById("progress");
+      const time = document.getElementById("time");
+      const status = document.getElementById("ad-status");
+      const duration = 20;
+      let startedAt = 0;
+      let elapsedBeforePause = 0;
+      let playing = false;
+      let frame = 0;
+
+      function render() {
+        if (!playing) return;
+        const elapsed = Math.min(duration, elapsedBeforePause + (performance.now() - startedAt) / 1000);
+        const current = scenes.find(scene => elapsed >= Number(scene.dataset.start) && elapsed < Number(scene.dataset.end));
+        scenes.forEach(scene => scene.classList.toggle("active", scene === current));
+        if (current) caption.textContent = current.dataset.caption;
+        progress.style.width = `${(elapsed / duration) * 100}%`;
+        const seconds = Math.floor(elapsed);
+        time.textContent = `0:${String(seconds).padStart(2, "0")}`;
+        if (elapsed >= duration) {
+          playing = false;
+          elapsedBeforePause = duration;
+          button.textContent = "↻ Replay ad";
+          status.textContent = "Ad preview finished.";
+          return;
+        }
+        frame = requestAnimationFrame(render);
+      }
+
+      button.addEventListener("click", () => {
+        if (playing) {
+          elapsedBeforePause += (performance.now() - startedAt) / 1000;
+          playing = false;
+          cancelAnimationFrame(frame);
+          button.textContent = "▶ Resume";
+          status.textContent = "Ad preview paused.";
+          return;
+        }
+        if (elapsedBeforePause >= duration) {
+          elapsedBeforePause = 0;
+          progress.style.width = "0%";
+        }
+        startedAt = performance.now();
+        playing = true;
+        button.textContent = "Ⅱ Pause";
+        status.textContent = "Ad preview playing.";
+        render();
+      });
+    })();
+  </script>
+</body>
+</html>
