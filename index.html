@@ -1,4 +1,66 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My Arcade</title><style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse at top,#294333,#0c1010 70%);color:#edf7f1;font-family:'Trebuchet MS',system-ui,sans-serif;text-align:center}.card{max-width:640px;padding:clamp(20px,5vw,48px);border:2px solid #415f49;border-radius:32px;background:#18271e;box-shadow:0 20px 70px #0005}.hello{color:#ffc568;font-size:12px;letter-spacing:2px}h1{font-size:clamp(34px,7vw,60px);line-height:1.1;margin:18px 0;color:#b3ff83}p{color:#c2d7c9;line-height:1.6}.snakes{font-size:44px;letter-spacing:12px}.snakes span:nth-child(1){color:#fd75aa}.snakes span:nth-child(2){color:#67c7ff}.snakes span:nth-child(3){color:#b79aff}a{display:inline-block;background:#b3ff83;color:#15270f;padding:15px 28px;border-radius:16px;font-weight:bold;text-decoration:none;margin-top:12px}a:hover{background:#ccffa9}a:focus-visible{outline:3px solid #ffc568;outline-offset:5px}.small{font-size:12px;color:#9bbba7}@media(max-height:500px){.card{padding:16px}h1{font-size:32px;margin:8px}.snakes{font-size:28px}p{margin:8px}}
-</style></head><body><main class="card"><div class="hello">HELLO FROM MY ARCADE</div><div class="snakes" aria-hidden="true"><span>~</span><span>~</span><span>~</span></div><h1>Small snakes.<br>Big fun!</h1><p>Welcome to Snake Arena! Gobble pearls, grow your snake, and chase the gold crown. Play solo or team up with a friend.</p><a href="snakes.html">Play Snake Arena &#8594;</a><p class="small">1 or 2 players &middot; Free to play &middot; No downloads</p></main></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Play free games at My Arcade: run with a cat in Cat Sprint, challenge rivals in Snake Arena, and enjoy more browser games. No downloads needed.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://ian-liu17.github.io/my-arcade/">
+  <title>My Arcade — Free Snake Arena and Fun.fun Games</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      display: grid;
+      min-height: 100vh;
+      min-height: 100dvh;
+      place-items: center;
+      margin: 0;
+      padding: 22px;
+      background: radial-gradient(ellipse at top, #294333, #0c1010 70%);
+      color: #edf7f1;
+      font-family: "Trebuchet MS", system-ui, sans-serif;
+      text-align: center;
+    }
+    main {
+      width: min(100%, 700px);
+      padding: clamp(22px, 5vw, 48px);
+      border: 2px solid #415f49;
+      border-radius: 30px;
+      background: #18271e;
+      box-shadow: 0 20px 70px #0005;
+    }
+    .eyebrow { color: #ffc568; font-size: .75rem; font-weight: 800; letter-spacing: .16em; }
+    h1 { margin: 18px 0 10px; color: #b3ff83; font-size: clamp(2.2rem, 7vw, 3.8rem); }
+    p { color: #c2d7c9; line-height: 1.65; }
+    nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 24px 0; }
+    a {
+      display: inline-block;
+      padding: 14px 21px;
+      border-radius: 14px;
+      background: #b3ff83;
+      color: #15270f;
+      font-weight: 800;
+      text-decoration: none;
+    }
+    a:hover { background: #ccffa9; }
+    a:focus-visible { outline: 3px solid #ffc568; outline-offset: 4px; }
+    .secondary { border: 1px solid #657869; background: #26392d; color: #edf7f1; }
+    .secondary:hover { background: #354b3b; }
+    .ad-link { display: block; width: fit-content; margin: 0 auto; color: #baff83; font-size: .92rem; }
+    .small { color: #9bbba7; font-size: .82rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">MY ARCADE · LET'S PLAY!</p>
+    <h1>Small snakes.<br>Big fun!</h1>
+    <p>Play free browser games at My Arcade. Run with a speedy cat in Fun.fun, or gobble pearls and outsmart rivals in Snake Arena.</p>
+    <nav aria-label="Choose a game">
+      <a href="fun.fun.html">Play Fun.fun — Cat Sprint &amp; Snake Arena</a>
+      <a class="secondary" href="snakes.html">Play Snake Arena</a>
+    </nav>
+    <a class="ad-link" href="fun.fun-ad.html">Watch the 20-second Fun.fun ad ↗</a>
+    <p class="small">Free to play · No downloads needed</p>
+  </main>
+</body>
+</html>
